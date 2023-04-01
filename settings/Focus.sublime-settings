@@ -1,12 +1,6 @@
 {
-    "line_numbers": false,
-    "gutter": false,
-    "draw_centered": true,
-    "wrap_width": 80,
-    "word_wrap": true,
-    "scroll_past_end": true,
-    "rulers": [],
-    "draw_indent_guides": true,
-    "indent_guide_options": [],
-    "draw_white_space": "selection"
+    "show_minimap": false,
+    "show_side_bar": false,
+    "show_status_bar": false,
+    "show_tabs": false
 }
