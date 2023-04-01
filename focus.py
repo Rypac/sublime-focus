@@ -23,7 +23,7 @@ def enter_focus_mode(window: sublime.Window):
 
     window.set_tabs_visible(focus_settings.get("show_tabs", False))
     window.set_status_bar_visible(focus_settings.get("show_status_bar", False))
-    window.set_sidebar_visible(focus_settings.get("show_sidebar", False))
+    window.set_sidebar_visible(focus_settings.get("show_side_bar", False))
     window.set_minimap_visible(focus_settings.get("show_minimap", False))
 
     window.settings().set("focus_mode_state", pre_focus_state)
