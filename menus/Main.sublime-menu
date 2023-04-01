@@ -8,17 +8,11 @@
             },
             {
                 "caption": "Enter Focus Mode",
-                "command": "focus_mode",
-                "args": {
-                    "enable": true
-                }
+                "command": "enter_focus_mode"
             },
             {
                 "caption": "Exit Focus Mode",
-                "command": "focus_mode",
-                "args": {
-                    "enable": false
-                }
+                "command": "exit_focus_mode"
             }
         ]
     },
