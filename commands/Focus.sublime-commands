@@ -1,17 +1,7 @@
 [
     {
-        "caption": "View: Enter Focus Mode",
-        "command": "focus_mode",
-        "args": {
-            "enable": true
-        }
-    },
-    {
-        "caption": "View: Exit Focus Mode",
-        "command": "focus_mode",
-        "args": {
-            "enable": false
-        }
+        "caption": "View: Toggle Focus Mode",
+        "command": "toggle_focus_mode"
     },
     {
         "caption": "Preferences: Focus Settings",

@@ -93,3 +93,11 @@ class FocusModeCommand(sublime_plugin.WindowCommand):
 
     def is_visible(self, enable: bool) -> bool:
         return self.window.settings().has("focus_mode_state") != enable
+
+
+class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        if not self.window.settings().has("focus_mode_state"):
+            enter_focus_mode(self.window)
+        else:
+            exit_focus_mode(self.window)
