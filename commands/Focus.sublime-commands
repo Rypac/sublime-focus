@@ -1,0 +1,24 @@
+[
+    {
+        "caption": "View: Enter Focus Mode",
+        "command": "focus_mode",
+        "args": {
+            "enable": true
+        }
+    },
+    {
+        "caption": "View: Exit Focus Mode",
+        "command": "focus_mode",
+        "args": {
+            "enable": false
+        }
+    },
+    {
+        "caption": "Preferences: Focus Settings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/Focus/settings/Focus.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        }
+    }
+]

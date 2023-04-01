@@ -1,0 +1,56 @@
+[
+    {
+        "id": "view",
+        "children": [
+            {
+                "caption": "-",
+                "id": "full_screen"
+            },
+            {
+                "caption": "Enter Focus Mode",
+                "command": "focus_mode",
+                "args": {
+                    "enable": true
+                }
+            },
+            {
+                "caption": "Exit Focus Mode",
+                "command": "focus_mode",
+                "args": {
+                    "enable": false
+                }
+            }
+        ]
+    },
+    {
+        "id": "preferences",
+        "children": [
+            {
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
+                "children": [
+                    {
+                        "caption": "Focus",
+                        "children": [
+                            {
+                                "caption": "Settings - Default",
+                                "command": "open_file",
+                                "args": {
+                                    "file": "${packages}/Focus/settings/Focus.sublime-settings"
+                                }
+                            },
+                            {
+                                "caption": "Settings - User",
+                                "command": "open_file",
+                                "args": {
+                                    "file": "${packages}/User/Focus.sublime-settings"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
