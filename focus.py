@@ -2,31 +2,66 @@ import sublime
 import sublime_plugin
 
 
+def plugin_loaded():
+    load_focus_settings().add_on_change("focus_mode", update_window_settings)
+    load_distraction_free_settings().add_on_change("focus_mode", update_view_settings)
+
+
 def plugin_unloaded():
+    load_focus_settings().clear_on_change("focus_mode")
+    load_distraction_free_settings().clear_on_change("focus_mode")
+
     for window in sublime.windows():
         if window.settings().has("focus_mode_state"):
             exit_focus_mode(window)
+
+
+def load_focus_settings() -> sublime.Settings:
+    return sublime.load_settings("Focus.sublime-settings")
+
+
+def load_distraction_free_settings() -> sublime.Settings:
+    return sublime.load_settings("Distraction Free.sublime-settings")
+
+
+def update_window_settings():
+    focus_settings = load_focus_settings()
+
+    for window in sublime.windows():
+        if window.settings().has("focus_mode_state"):
+            apply_focus_mode_settings(window, focus_settings)
+
+
+def update_view_settings():
+    distraction_free_settings = load_distraction_free_settings().to_dict()
+
+    for window in sublime.windows():
+        if not window.settings().has("focus_mode_state"):
+            continue
+
+        for view in window.views():
+            view.settings().update(distraction_free_settings)
 
 
 def enter_focus_mode(window: sublime.Window):
     for view in window.views(include_transient=True):
         enter_view_focus_mode(view)
 
-    pre_focus_state = {
+    window.settings()["focus_mode_state"] = {
         "minimap": window.is_minimap_visible(),
-        "sidebar": window.is_sidebar_visible(),
+        "side_bar": window.is_sidebar_visible(),
         "status_bar": window.is_status_bar_visible(),
         "tabs": window.get_tabs_visible(),
     }
 
-    focus_settings = sublime.load_settings("Focus.sublime-settings")
+    apply_focus_mode_settings(window, settings=load_focus_settings())
 
-    window.set_tabs_visible(focus_settings.get("show_tabs", False))
-    window.set_status_bar_visible(focus_settings.get("show_status_bar", False))
-    window.set_sidebar_visible(focus_settings.get("show_side_bar", False))
-    window.set_minimap_visible(focus_settings.get("show_minimap", False))
 
-    window.settings().set("focus_mode_state", pre_focus_state)
+def apply_focus_mode_settings(window: sublime.Window, settings: sublime.Settings):
+    window.set_minimap_visible(settings.get("show_minimap", False))
+    window.set_sidebar_visible(settings.get("show_side_bar", False))
+    window.set_status_bar_visible(settings.get("show_status_bar", False))
+    window.set_tabs_visible(settings.get("show_tabs", False))
 
 
 def exit_focus_mode(window: sublime.Window):
@@ -36,7 +71,7 @@ def exit_focus_mode(window: sublime.Window):
     pre_focus_state = window.settings().get("focus_mode_state", {})
 
     window.set_minimap_visible(pre_focus_state.get("minimap", True))
-    window.set_sidebar_visible(pre_focus_state.get("sidebar", True))
+    window.set_sidebar_visible(pre_focus_state.get("side_bar", True))
     window.set_status_bar_visible(pre_focus_state.get("status_bar", True))
     window.set_tabs_visible(pre_focus_state.get("tabs", True))
 
@@ -49,23 +84,32 @@ def enter_view_focus_mode(view: sublime.View):
     if view_settings.has("focus_mode_state"):
         return
 
-    focus_settings = sublime.load_settings("Distraction Free.sublime-settings")
+    distraction_free_settings = load_distraction_free_settings().to_dict()
 
-    pre_focus_state = {}
+    view_settings["focus_mode_state"] = {
+        key: value
+        for key in distraction_free_settings
+        if (value := view_settings.get(key)) is not None
+    }
 
-    for key, value in focus_settings.to_dict().items():
-        pre_focus_state[key] = view_settings.get(key)
-        view_settings.set(key, value)
-
-    view_settings.set("focus_mode_state", pre_focus_state)
+    view_settings.update(distraction_free_settings)
 
 
 def exit_view_focus_mode(view: sublime.View):
     view_settings = view.settings()
 
-    if (pre_focus_state := view_settings.get("focus_mode_state")) is not None:
-        view_settings.update(pre_focus_state)
-        view_settings.erase("focus_mode_state")
+    if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
+        return
+
+    distraction_free_settings = load_distraction_free_settings().to_dict()
+
+    for key in distraction_free_settings:
+        if (value := pre_focus_state.get(key)) is not None:
+            view_settings.set(key, value)
+        else:
+            view_settings.erase(key)
+
+    view_settings.erase("focus_mode_state")
 
 
 class FocusModeListener(sublime_plugin.EventListener):
