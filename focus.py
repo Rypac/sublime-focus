@@ -2,18 +2,31 @@ import sublime
 import sublime_plugin
 
 
+distraction_free_settings = {}
+
+
 def plugin_loaded():
-    load_focus_settings().add_on_change("focus_mode", update_window_settings)
-    load_distraction_free_settings().add_on_change("focus_mode", update_view_settings)
+    focus_settings = load_focus_settings()
+    focus_settings.add_on_change("focus_mode", update_focus_mode_window_settings)
+
+    df_settings = load_distraction_free_settings()
+    df_settings.add_on_change("focus_mode", update_focus_mode_view_settings)
+
+    distraction_free_settings.update(df_settings.to_dict())
 
 
 def plugin_unloaded():
-    load_focus_settings().clear_on_change("focus_mode")
-    load_distraction_free_settings().clear_on_change("focus_mode")
+    focus_settings = load_focus_settings()
+    focus_settings.clear_on_change("focus_mode")
+
+    df_settings = load_distraction_free_settings()
+    df_settings.clear_on_change("focus_mode")
 
     for window in sublime.windows():
         if window.settings().has("focus_mode_state"):
             exit_focus_mode(window)
+
+    distraction_free_settings.clear()
 
 
 def load_focus_settings() -> sublime.Settings:
@@ -24,7 +37,7 @@ def load_distraction_free_settings() -> sublime.Settings:
     return sublime.load_settings("Distraction Free.sublime-settings")
 
 
-def update_window_settings():
+def update_focus_mode_window_settings():
     focus_settings = load_focus_settings()
 
     for window in sublime.windows():
@@ -32,8 +45,9 @@ def update_window_settings():
             apply_focus_mode_settings(window, focus_settings)
 
 
-def update_view_settings():
-    distraction_free_settings = load_distraction_free_settings().to_dict()
+def update_focus_mode_view_settings():
+    distraction_free_settings.clear()
+    distraction_free_settings.update(load_distraction_free_settings().to_dict())
 
     for window in sublime.windows():
         if not window.settings().has("focus_mode_state"):
@@ -84,8 +98,6 @@ def enter_view_focus_mode(view: sublime.View):
     if view_settings.has("focus_mode_state"):
         return
 
-    distraction_free_settings = load_distraction_free_settings().to_dict()
-
     view_settings["focus_mode_state"] = {
         key: value
         for key in distraction_free_settings
@@ -100,8 +112,6 @@ def exit_view_focus_mode(view: sublime.View):
 
     if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
         return
-
-    distraction_free_settings = load_distraction_free_settings().to_dict()
 
     for key in distraction_free_settings:
         if (value := pre_focus_state.get(key)) is not None:
