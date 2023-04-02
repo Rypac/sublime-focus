@@ -45,14 +45,12 @@ def enter_focus_mode(window: sublime.Window):
     for view in window.views(include_transient=True):
         enter_view_focus_mode(view)
 
-    pre_focus_state = {
+    window.settings()["focus_mode_state"] = {
         "minimap": window.is_minimap_visible(),
-        "sidebar": window.is_sidebar_visible(),
+        "side_bar": window.is_sidebar_visible(),
         "status_bar": window.is_status_bar_visible(),
         "tabs": window.get_tabs_visible(),
     }
-
-    window.settings().set("focus_mode_state", pre_focus_state)
 
     focus_settings = sublime.load_settings("Focus.sublime-settings")
     apply_focus_mode_window_settings(window, focus_settings)
@@ -66,13 +64,13 @@ def apply_focus_mode_window_settings(window: sublime.Window, settings: sublime.S
 
 
 def exit_focus_mode(window: sublime.Window):
-    for view in window.views(include_transient=True):
+    for view in window.views(include_toransient=True):
         exit_view_focus_mode(view)
 
     pre_focus_state = window.settings().get("focus_mode_state", {})
 
     window.set_minimap_visible(pre_focus_state.get("minimap", True))
-    window.set_sidebar_visible(pre_focus_state.get("sidebar", True))
+    window.set_sidebar_visible(pre_focus_state.get("side_bar", True))
     window.set_status_bar_visible(pre_focus_state.get("status_bar", True))
     window.set_tabs_visible(pre_focus_state.get("tabs", True))
 
@@ -85,15 +83,13 @@ def enter_view_focus_mode(view: sublime.View):
     if view_settings.has("focus_mode_state"):
         return
 
-    focus_settings = sublime.load_settings("Distraction Free.sublime-settings")
+    focus_settings = sublime.load_settings("Distraction Free.sublime-settings").to_dict()
 
-    pre_focus_state = {}
+    view_settings["focus_mode_state"] = {
+        key: view_settings.get(key) for key in focus_settings
+    }
 
-    for key, value in focus_settings.to_dict().items():
-        pre_focus_state[key] = view_settings.get(key)
-        view_settings.set(key, value)
-
-    view_settings.set("focus_mode_state", pre_focus_state)
+    view_settings.update(focus_settings)
 
 
 def exit_view_focus_mode(view: sublime.View):
