@@ -124,17 +124,11 @@ def exit_view_focus_mode(view: sublime.View):
 
 class FocusModeListener(sublime_plugin.EventListener):
     def on_new(self, view: sublime.View):
-        if (window := view.window()) is None:
-            return
-
-        if window.settings().has("focus_mode_state"):
+        if (window := view.window()) and window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
 
     def on_load(self, view: sublime.View):
-        if (window := view.window()) is None:
-            return
-
-        if window.settings().has("focus_mode_state"):
+        if (window := view.window()) and window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
 
 
