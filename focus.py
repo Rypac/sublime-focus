@@ -87,7 +87,9 @@ def enter_view_focus_mode(view: sublime.View):
     distraction_free_settings = load_distraction_free_settings().to_dict()
 
     view_settings["focus_mode_state"] = {
-        key: view_settings.get(key) for key in distraction_free_settings
+        key: value
+        for key in distraction_free_settings
+        if (value := view_settings.get(key)) is not None
     }
 
     view_settings.update(distraction_free_settings)
@@ -96,9 +98,18 @@ def enter_view_focus_mode(view: sublime.View):
 def exit_view_focus_mode(view: sublime.View):
     view_settings = view.settings()
 
-    if (pre_focus_state := view_settings.get("focus_mode_state")) is not None:
-        view_settings.update(pre_focus_state)
-        view_settings.erase("focus_mode_state")
+    if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
+        return
+
+    distraction_free_settings = load_distraction_free_settings().to_dict()
+
+    for key in distraction_free_settings:
+        if (value := pre_focus_state.get(key)) is not None:
+            view_settings.set(key, value)
+        else:
+            view_settings.erase(key)
+
+    view_settings.erase("focus_mode_state")
 
 
 class FocusModeListener(sublime_plugin.EventListener):
