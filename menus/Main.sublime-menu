@@ -28,17 +28,11 @@
                         "caption": "Focus",
                         "children": [
                             {
-                                "caption": "Settings - Default",
-                                "command": "open_file",
+                                "caption": "Settings",
+                                "command": "edit_settings",
                                 "args": {
-                                    "file": "${packages}/Focus/settings/Focus.sublime-settings"
-                                }
-                            },
-                            {
-                                "caption": "Settings - User",
-                                "command": "open_file",
-                                "args": {
-                                    "file": "${packages}/User/Focus.sublime-settings"
+                                    "base_file": "${packages}/Focus/settings/Focus.sublime-settings",
+                                    "default": "{\n\t$0\n}\n"
                                 }
                             }
                         ]
