@@ -64,7 +64,7 @@ def apply_focus_mode_window_settings(window: sublime.Window, settings: sublime.S
 
 
 def exit_focus_mode(window: sublime.Window):
-    for view in window.views(include_toransient=True):
+    for view in window.views(include_transient=True):
         exit_view_focus_mode(view)
 
     pre_focus_state = window.settings().get("focus_mode_state", {})
