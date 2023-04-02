@@ -7,12 +7,7 @@
                 "id": "full_screen"
             },
             {
-                "caption": "Enter Focus Mode",
-                "command": "enter_focus_mode"
-            },
-            {
-                "caption": "Exit Focus Mode",
-                "command": "exit_focus_mode"
+                "command": "toggle_focus_mode"
             }
         ]
     },
