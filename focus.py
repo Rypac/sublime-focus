@@ -136,8 +136,6 @@ class FocusModeListener(sublime_plugin.EventListener):
 
         if window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
-        else:
-            exit_view_focus_mode(view)
 
 
 class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
