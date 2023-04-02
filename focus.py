@@ -84,13 +84,13 @@ def enter_view_focus_mode(view: sublime.View):
     if view_settings.has("focus_mode_state"):
         return
 
-    focus_settings = sublime.load_settings("Distraction Free.sublime-settings").to_dict()
+    distraction_free_settings = load_distraction_free_settings().to_dict()
 
     view_settings["focus_mode_state"] = {
-        key: view_settings.get(key) for key in focus_settings
+        key: view_settings.get(key) for key in distraction_free_settings
     }
 
-    view_settings.update(focus_settings)
+    view_settings.update(distraction_free_settings)
 
 
 def exit_view_focus_mode(view: sublime.View):
