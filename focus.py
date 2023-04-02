@@ -130,25 +130,16 @@ class FocusModeListener(sublime_plugin.EventListener):
             exit_view_focus_mode(view)
 
 
-class EnterFocusModeCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        enter_focus_mode(self.window)
-
-    def is_visible(self) -> bool:
-        return not self.window.settings().has("focus_mode_state")
-
-
-class ExitFocusModeCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        exit_focus_mode(self.window)
-
-    def is_visible(self) -> bool:
-        return self.window.settings().has("focus_mode_state")
-
-
 class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
     def run(self):
         if not self.window.settings().has("focus_mode_state"):
             enter_focus_mode(self.window)
         else:
             exit_focus_mode(self.window)
+
+    def description(self) -> str:
+        return (
+            "Enter Focus Mode"
+            if not self.window.settings().has("focus_mode_state")
+            else "Exit Focus Mode"
+        )
