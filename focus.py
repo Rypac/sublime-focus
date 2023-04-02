@@ -58,10 +58,10 @@ def enter_focus_mode(window: sublime.Window):
 
 
 def apply_focus_mode_settings(window: sublime.Window, settings: sublime.Settings):
-    window.set_tabs_visible(settings.get("show_tabs", False))
-    window.set_status_bar_visible(settings.get("show_status_bar", False))
-    window.set_sidebar_visible(settings.get("show_side_bar", False))
     window.set_minimap_visible(settings.get("show_minimap", False))
+    window.set_sidebar_visible(settings.get("show_side_bar", False))
+    window.set_status_bar_visible(settings.get("show_status_bar", False))
+    window.set_tabs_visible(settings.get("show_tabs", False))
 
 
 def exit_focus_mode(window: sublime.Window):
