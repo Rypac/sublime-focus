@@ -3,8 +3,8 @@ import sublime_plugin
 
 
 def plugin_loaded():
-    load_focus_settings().add_on_change("focus_mode", update_focus_mode_window_settings)
-    load_distraction_free_settings().add_on_change("focus_mode", update_focus_mode_view_settings)
+    load_focus_settings().add_on_change("focus_mode", update_window_settings)
+    load_distraction_free_settings().add_on_change("focus_mode", update_view_settings)
 
 
 def plugin_unloaded():
@@ -24,23 +24,23 @@ def load_distraction_free_settings() -> sublime.Settings:
     return sublime.load_settings("Distraction Free.sublime-settings")
 
 
-def update_focus_mode_window_settings():
-    settings = load_focus_settings()
+def update_window_settings():
+    focus_settings = load_focus_settings()
 
     for window in sublime.windows():
         if window.settings().has("focus_mode_state"):
-            apply_focus_mode_settings(window, settings)
+            apply_focus_mode_settings(window, focus_settings)
 
 
-def update_focus_mode_view_settings():
-    settings = load_distraction_free_settings().to_dict()
+def update_view_settings():
+    distraction_free_settings = load_distraction_free_settings().to_dict()
 
     for window in sublime.windows():
         if not window.settings().has("focus_mode_state"):
             continue
-        
+
         for view in window.views():
-            view.settings().update(settings)
+            view.settings().update(distraction_free_settings)
 
 
 def enter_focus_mode(window: sublime.Window):
@@ -54,7 +54,7 @@ def enter_focus_mode(window: sublime.Window):
         "tabs": window.get_tabs_visible(),
     }
 
-    apply_focus_mode_settings(window, load_focus_settings())
+    apply_focus_mode_settings(window, settings=load_focus_settings())
 
 
 def apply_focus_mode_settings(window: sublime.Window, settings: sublime.Settings):
