@@ -38,17 +38,6 @@ def load_focus_settings() -> sublime.Settings:
     return sublime.load_settings("Focus.sublime-settings")
 
 
-def load_project_focus_settings(window: sublime.Window) -> Dict[str, Any]:
-    if not (project := window.project_data()):
-        return focus_mode_settings
-
-    return (
-        {**focus_mode_settings, **project_settings}
-        if (project_settings := project.get("settings", {}).get("Focus", {}))
-        else focus_mode_settings
-    )
-
-
 def load_distraction_free_settings() -> sublime.Settings:
     return sublime.load_settings("Distraction Free.sublime-settings")
 
@@ -59,8 +48,7 @@ def update_focus_mode_window_settings():
 
     for window in sublime.windows():
         if window.settings().has("focus_mode_state"):
-            settings = load_project_focus_settings(window)
-            apply_focus_mode_settings(window, settings)
+            apply_focus_mode_settings(window)
 
 
 def update_focus_mode_view_settings():
@@ -80,17 +68,21 @@ def enter_focus_mode(window: sublime.Window):
         enter_view_focus_mode(view)
 
     window.settings()["focus_mode_state"] = {
-        "minimap": window.is_minimap_visible(),
-        "side_bar": window.is_sidebar_visible(),
-        "status_bar": window.is_status_bar_visible(),
-        "tabs": window.get_tabs_visible(),
+        "show_minimap": window.is_minimap_visible(),
+        "show_side_bar": window.is_sidebar_visible(),
+        "show_status_bar": window.is_status_bar_visible(),
+        "show_tabs": window.get_tabs_visible(),
     }
 
-    settings = load_project_focus_settings(window)
-    apply_focus_mode_settings(window, settings)
+    apply_focus_mode_settings(window)
 
 
-def apply_focus_mode_settings(window: sublime.Window, settings: Dict[str, Any]):
+def apply_focus_mode_settings(window: sublime.Window):
+    settings = {
+        **focus_mode_settings,
+        **(window.project_data() or {}).get("settings", {}).get("Focus", {}),
+    }
+
     window.set_minimap_visible(settings.get("show_minimap", False))
     window.set_sidebar_visible(settings.get("show_side_bar", False))
     window.set_status_bar_visible(settings.get("show_status_bar", False))
@@ -103,10 +95,10 @@ def exit_focus_mode(window: sublime.Window):
 
     pre_focus_state = window.settings().get("focus_mode_state", {})
 
-    window.set_minimap_visible(pre_focus_state.get("minimap", True))
-    window.set_sidebar_visible(pre_focus_state.get("side_bar", True))
-    window.set_status_bar_visible(pre_focus_state.get("status_bar", True))
-    window.set_tabs_visible(pre_focus_state.get("tabs", True))
+    window.set_minimap_visible(pre_focus_state.get("show_minimap", True))
+    window.set_sidebar_visible(pre_focus_state.get("show_side_bar", True))
+    window.set_status_bar_visible(pre_focus_state.get("show_status_bar", True))
+    window.set_tabs_visible(pre_focus_state.get("show_tabs", True))
 
     window.settings().erase("focus_mode_state")
 
@@ -132,11 +124,13 @@ def exit_view_focus_mode(view: sublime.View):
     if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
         return
 
-    for key in distraction_free_settings:
-        if (value := pre_focus_state.get(key)) is not None:
-            view_settings.set(key, value)
-        else:
-            view_settings.erase(key)
+    view_settings.update(
+        {
+            key: value
+            for key in distraction_free_settings
+            if (value := pre_focus_state.get(key)) is not None
+        },
+    )
 
     view_settings.erase("focus_mode_state")
 
@@ -150,11 +144,13 @@ class FocusModeListener(sublime_plugin.EventListener):
         if (window := view.window()) and window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
 
-    def on_load_project_async(self, window: sublime.View) -> None:
-        update_focus_mode_window_settings()
+    def on_load_project_async(self, window: sublime.Window) -> None:
+        if window.settings().has("focus_mode_state"):
+            apply_focus_mode_settings(window)
 
-    def on_post_save_project_async(self, window: sublime.View) -> None:
-        update_focus_mode_window_settings()
+    def on_post_save_project_async(self, window: sublime.Window) -> None:
+        if window.settings().has("focus_mode_state"):
+            apply_focus_mode_settings(window)
 
 
 class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
