@@ -1,11 +1,13 @@
+from __future__ import annotations
+
 import sublime
 import sublime_plugin
 
-from typing import Any, Dict
+from typing import Any
 
 
-focus_mode_settings = {}
-distraction_free_settings = {}
+focus_mode_settings: dict[str, Any] = {}
+distraction_free_settings: dict[str, Any] = {}
 
 
 def plugin_loaded():
