@@ -126,14 +126,7 @@ def exit_view_focus_mode(view: sublime.View):
     if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
         return
 
-    view_settings.update(
-        {
-            key: value
-            for key in distraction_free_settings
-            if (value := pre_focus_state.get(key)) is not None
-        },
-    )
-
+    view_settings.update(pre_focus_state)
     view_settings.erase("focus_mode_state")
 
 
