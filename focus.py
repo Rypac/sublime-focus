@@ -126,14 +126,7 @@ def exit_view_focus_mode(view: sublime.View):
     if (pre_focus_state := view_settings.get("focus_mode_state")) is None:
         return
 
-    view_settings.update(
-        {
-            key: value
-            for key in distraction_free_settings
-            if (value := pre_focus_state.get(key)) is not None
-        },
-    )
-
+    view_settings.update(pre_focus_state)
     view_settings.erase("focus_mode_state")
 
 
@@ -146,11 +139,11 @@ class FocusModeListener(sublime_plugin.EventListener):
         if (window := view.window()) and window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
 
-    def on_load_project_async(self, window: sublime.Window) -> None:
+    def on_load_project(self, window: sublime.Window) -> None:
         if window.settings().has("focus_mode_state"):
             apply_focus_mode_settings(window)
 
-    def on_post_save_project_async(self, window: sublime.Window) -> None:
+    def on_post_save_project(self, window: sublime.Window) -> None:
         if window.settings().has("focus_mode_state"):
             apply_focus_mode_settings(window)
 
