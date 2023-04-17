@@ -1,0 +1,9 @@
+[
+    // To avoid potential conflicts, key bindings are not enabled by default.
+    // The following is an example that can be enabled in your own key bindings configuration.
+    //
+    // {
+    //     "keys": ["super+k", "super+f"],
+    //     "command": "toggle_focus_mode"
+    // }
+]
