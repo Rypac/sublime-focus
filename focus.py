@@ -139,11 +139,11 @@ class FocusModeListener(sublime_plugin.EventListener):
         if (window := view.window()) and window.settings().has("focus_mode_state"):
             enter_view_focus_mode(view)
 
-    def on_load_project(self, window: sublime.Window) -> None:
+    def on_load_project(self, window: sublime.Window):
         if window.settings().has("focus_mode_state"):
             apply_focus_mode_settings(window)
 
-    def on_post_save_project(self, window: sublime.Window) -> None:
+    def on_post_save_project(self, window: sublime.Window):
         if window.settings().has("focus_mode_state"):
             apply_focus_mode_settings(window)
 
