@@ -1,4 +1,10 @@
 {
+    // Default settings for Sublime Focus. DO NOT MODIFY!
+    // To make changes, copy and/or modify your user settings.
+    // User settings can be accessed from the menu via:
+    //     Settings > Package Settings > Focus > Settings
+
+    // These settings configure the visibility for parts of the UI when in Focus Mode.
     "show_minimap": false,
     "show_side_bar": false,
     "show_status_bar": false,

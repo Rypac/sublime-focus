@@ -1,4 +1,9 @@
 [
+    // Default key bindings for Sublime Focus. DO NOT MODIFY!
+    // To make changes, copy and/or modify your user settings.
+    // User settings can be accessed from the menu via:
+    //     Settings > Package Settings > Focus > Key Bindings
+
     // To avoid potential conflicts, key bindings are not enabled by default.
     // The following is an example that can be enabled in your own key bindings configuration.
     //
