@@ -121,6 +121,7 @@ def enter_view_focus_mode(view: sublime.View):
     }
 
     view_settings.update(distraction_free_settings)
+    view.set_status(FOCUS_MODE_KEY, "Focus Mode")
 
 
 def exit_view_focus_mode(view: sublime.View):
@@ -131,6 +132,7 @@ def exit_view_focus_mode(view: sublime.View):
 
     view_settings.update(pre_focus_state)
     view_settings.erase(FOCUS_MODE_KEY)
+    view.erase_status(FOCUS_MODE_KEY)
 
 
 class FocusModeListener(sublime_plugin.EventListener):
