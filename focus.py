@@ -32,7 +32,7 @@ def plugin_unloaded():
     df_settings.clear_on_change("focus_mode")
 
     for window in sublime.windows():
-        if window.settings().has(FOCUS_MODE_KEY):
+        if window.template_settings().has(FOCUS_MODE_KEY):
             exit_focus_mode(window)
 
     focus_mode_settings.clear()
@@ -52,7 +52,7 @@ def update_focus_mode_window_settings():
     focus_mode_settings.update(load_focus_settings().to_dict())
 
     for window in sublime.windows():
-        if window.settings().has(FOCUS_MODE_KEY):
+        if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
 
@@ -61,7 +61,7 @@ def update_focus_mode_view_settings():
     distraction_free_settings.update(load_distraction_free_settings().to_dict())
 
     for window in sublime.windows():
-        if not window.settings().has(FOCUS_MODE_KEY):
+        if not window.template_settings().has(FOCUS_MODE_KEY):
             continue
 
         for view in window.views():
@@ -72,7 +72,7 @@ def enter_focus_mode(window: sublime.Window):
     for view in window.views(include_transient=True):
         enter_view_focus_mode(view)
 
-    window.settings()[FOCUS_MODE_KEY] = {
+    window.template_settings()[FOCUS_MODE_KEY] = {
         "show_minimap": window.is_minimap_visible(),
         "show_side_bar": window.is_sidebar_visible(),
         "show_status_bar": window.is_status_bar_visible(),
@@ -98,14 +98,14 @@ def exit_focus_mode(window: sublime.Window):
     for view in window.views(include_transient=True):
         exit_view_focus_mode(view)
 
-    pre_focus_state = window.settings().get(FOCUS_MODE_KEY, {})
+    pre_focus_state = window.template_settings().get(FOCUS_MODE_KEY, {})
 
     window.set_minimap_visible(pre_focus_state.get("show_minimap", True))
     window.set_sidebar_visible(pre_focus_state.get("show_side_bar", True))
     window.set_status_bar_visible(pre_focus_state.get("show_status_bar", True))
     window.set_tabs_visible(pre_focus_state.get("show_tabs", True))
 
-    window.settings().erase(FOCUS_MODE_KEY)
+    window.template_settings().erase(FOCUS_MODE_KEY)
 
 
 def enter_view_focus_mode(view: sublime.View):
@@ -135,29 +135,37 @@ def exit_view_focus_mode(view: sublime.View):
 
 class FocusModeListener(sublime_plugin.EventListener):
     def on_new(self, view: sublime.View):
-        if (window := view.window()) and window.settings().has(FOCUS_MODE_KEY):
+        if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
+
+    def on_new_window(self, window: sublime.Window):
+        if window.template_settings().has(FOCUS_STATE_KEY):
+            exit_focus_mode(window)
 
     def on_load(self, view: sublime.View):
-        if (window := view.window()) and window.settings().has(FOCUS_MODE_KEY):
+        if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
+    def on_pre_move(self, view: sublime.View):
+        if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
+            exit_view_focus_mode(view)
+
     def on_post_move(self, view: sublime.View):
-        if (window := view.window()) and window.settings().has(FOCUS_MODE_KEY):
+        if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
     def on_load_project(self, window: sublime.Window):
-        if window.settings().has(FOCUS_MODE_KEY):
+        if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
     def on_post_save_project(self, window: sublime.Window):
-        if window.settings().has(FOCUS_MODE_KEY):
+        if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
 
 class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
     def run(self):
-        if not self.window.settings().has(FOCUS_MODE_KEY):
+        if not self.window.template_settings().has(FOCUS_MODE_KEY):
             enter_focus_mode(self.window)
         else:
             exit_focus_mode(self.window)
@@ -165,6 +173,6 @@ class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
     def description(self) -> str:
         return (
             "Enter Focus Mode"
-            if not self.window.settings().has(FOCUS_MODE_KEY)
+            if not self.window.template_settings().has(FOCUS_MODE_KEY)
             else "Exit Focus Mode"
         )
