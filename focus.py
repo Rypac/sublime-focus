@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import sublime
-import sublime_plugin
-
+from sublime import Settings, View, Window
+from sublime_plugin import EventListener, WindowCommand
 from typing import Any
 
 
@@ -39,11 +39,11 @@ def plugin_unloaded():
     distraction_free_settings.clear()
 
 
-def load_focus_settings() -> sublime.Settings:
+def load_focus_settings() -> Settings:
     return sublime.load_settings("Focus.sublime-settings")
 
 
-def load_distraction_free_settings() -> sublime.Settings:
+def load_distraction_free_settings() -> Settings:
     return sublime.load_settings("Distraction Free.sublime-settings")
 
 
@@ -68,7 +68,7 @@ def update_focus_mode_view_settings():
             view.settings().update(distraction_free_settings)
 
 
-def enter_focus_mode(window: sublime.Window):
+def enter_focus_mode(window: Window):
     for view in window.views(include_transient=True):
         enter_view_focus_mode(view)
 
@@ -82,7 +82,7 @@ def enter_focus_mode(window: sublime.Window):
     apply_focus_mode_settings(window)
 
 
-def apply_focus_mode_settings(window: sublime.Window):
+def apply_focus_mode_settings(window: Window):
     settings = {
         **focus_mode_settings,
         **(window.project_data() or {}).get("settings", {}).get("Focus", {}),
@@ -94,7 +94,7 @@ def apply_focus_mode_settings(window: sublime.Window):
     window.set_tabs_visible(settings.get("show_tabs", False))
 
 
-def exit_focus_mode(window: sublime.Window):
+def exit_focus_mode(window: Window):
     for view in window.views(include_transient=True):
         exit_view_focus_mode(view)
 
@@ -108,7 +108,7 @@ def exit_focus_mode(window: sublime.Window):
     window.template_settings().erase(FOCUS_MODE_KEY)
 
 
-def enter_view_focus_mode(view: sublime.View):
+def enter_view_focus_mode(view: View):
     view_settings = view.settings()
 
     if view_settings.has(FOCUS_MODE_KEY):
@@ -124,7 +124,7 @@ def enter_view_focus_mode(view: sublime.View):
     view.set_status(FOCUS_MODE_KEY, "Focus Mode")
 
 
-def exit_view_focus_mode(view: sublime.View):
+def exit_view_focus_mode(view: View):
     view_settings = view.settings()
 
     if (pre_focus_state := view_settings.get(FOCUS_MODE_KEY)) is None:
@@ -135,37 +135,37 @@ def exit_view_focus_mode(view: sublime.View):
     view.erase_status(FOCUS_MODE_KEY)
 
 
-class FocusModeListener(sublime_plugin.EventListener):
-    def on_new(self, view: sublime.View):
+class FocusModeListener(EventListener):
+    def on_new(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
-    def on_new_window(self, window: sublime.Window):
+    def on_new_window(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             exit_focus_mode(window)
 
-    def on_load(self, view: sublime.View):
+    def on_load(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
-    def on_pre_move(self, view: sublime.View):
+    def on_pre_move(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             exit_view_focus_mode(view)
 
-    def on_post_move(self, view: sublime.View):
+    def on_post_move(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
-    def on_load_project(self, window: sublime.Window):
+    def on_load_project(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
-    def on_post_save_project(self, window: sublime.Window):
+    def on_post_save_project(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
 
-class ToggleFocusModeCommand(sublime_plugin.WindowCommand):
+class ToggleFocusModeCommand(WindowCommand):
     def run(self):
         if not self.window.template_settings().has(FOCUS_MODE_KEY):
             enter_focus_mode(self.window)
