@@ -29,6 +29,14 @@
                                     "base_file": "${packages}/Focus/settings/Focus.sublime-settings",
                                     "default": "{\n\t$0\n}\n"
                                 }
+                            },
+                            {
+                                "caption": "Key Bindings",
+                                "command": "edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Focus/keymaps/Default ($platform).sublime-keymap",
+                                    "default": "[\n\t$0\n]\n"
+                                }
                             }
                         ]
                     }
