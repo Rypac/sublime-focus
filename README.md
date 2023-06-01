@@ -46,3 +46,4 @@ The following is an example that uses a key binding to toggle focus mode for the
         "command": "toggle_focus_mode"
     }
 ]
+```
