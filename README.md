@@ -29,9 +29,11 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 ## Commands
 
-- `View: Toggle Focus Mode` – Toggle focus mode for the active window
-- `Preferences: Focus Settings` – Edit plugin settings
-- `Preferences: Focus Key Bindings` – Edit plugin key bindings
+| **Command**                         | **Description**                         |
+| ----------------------------------- | --------------------------------------- |
+| **View: Toggle Focus Mode**         | Toggle focus mode for the active window |
+| **Preferences: Focus Settings**     | Edit plugin settings                    |
+| **Preferences: Focus Key Bindings** | Edit plugin key bindings                |
 
 ## Key Bindings
 
