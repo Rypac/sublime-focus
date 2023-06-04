@@ -27,8 +27,7 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 ### Clone Repository
 
 1. Select the `Settings > Browse Packages…` menu item
-2. Open the `Packages/` directory in the terminal or a git client
-3. Clone the repository:
+2. Within the `Packages/` directory, clone the repository:
 
     ```
     git clone https://github.com/Rypac/sublime-focus.git Focus
