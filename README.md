@@ -20,7 +20,10 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 ### Manual (via `git`)
 
-1. Navigate to the Sublime Text package directory
+1. Navigate to the **Packages** directory
+    - macOS: `~/Library/Application Support/Sublime Text/Packages`
+    - Linux: `~/.config/sublime-text/Packages`
+    - Window: `%APPDATA%\Sublime Text\Packages`
 2. Clone the repository:
 
     ```
