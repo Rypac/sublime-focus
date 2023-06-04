@@ -10,7 +10,7 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 ## Installation
 
-### Manual (via Package Control)
+### Package Control
 
 1. Install [Package Control](https://packagecontrol.io)
 2. Run `Package Control: Add Repository` in the Command Palette
@@ -18,7 +18,15 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 4. Run `Package Control: Install Package` in the Command Palette
 5. Install `sublime-focus`
 
-### Manual (via `git`)
+### Manual
+
+1. Download [**Focus.sublime-package**](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) from the [latest release](https://github.com/Rypac/sublime-focus/releases/tag/latest)
+2. Copy the downloaded artifact into the **Installed Packages** directory
+    - macOS: `~/Library/Application Support/Sublime Text/Installed Packages`
+    - Linux: `~/.config/sublime-text/Installed Packages`
+    - Window: `%APPDATA%\Sublime Text\Installed Packages`
+
+### Clone Repository
 
 1. Navigate to the **Packages** directory
     - macOS: `~/Library/Application Support/Sublime Text/Packages`
@@ -29,14 +37,6 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
     ```
     git clone https://github.com/Rypac/sublime-focus.git Focus
     ```
-
-### Manual (via release artifacts)
-
-1. Download [**Focus.sublime-package**](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) from the [latest release](https://github.com/Rypac/sublime-focus/releases/tag/latest).
-2. Copy the downloaded artifact into the **Installed Packages** directory.
-    - macOS: `~/Library/Application Support/Sublime Text/Installed Packages`
-    - Linux: `~/.config/sublime-text/Installed Packages`
-    - Window: `%APPDATA%\Sublime Text\Installed Packages`
 
 ## Commands
 
