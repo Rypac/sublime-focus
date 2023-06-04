@@ -10,7 +10,7 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 ## Installation
 
-### Manual (via Package Control)
+### Package Control
 
 1. Install [Package Control](https://packagecontrol.io)
 2. Run `Package Control: Add Repository` in the Command Palette
@@ -18,10 +18,16 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 4. Run `Package Control: Install Package` in the Command Palette
 5. Install `sublime-focus`
 
-### Manual (via `git`)
+### Manual
 
-1. Navigate to the Sublime Text package directory
-2. Clone the repository:
+1. Select the `Settings > Browse Packages…` menu item
+2. Browse up a directory and then into the `Installed Packages/` directory
+3. Download [`Focus.sublime-package`](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) and copy it into the `Installed Packages/` directory
+
+### Clone Repository
+
+1. Select the `Settings > Browse Packages…` menu item
+2. Within the `Packages/` directory, clone the repository:
 
     ```
     git clone https://github.com/Rypac/sublime-focus.git Focus
