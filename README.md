@@ -20,19 +20,15 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 ### Manual
 
-1. Download [**Focus.sublime-package**](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) from the [latest release](https://github.com/Rypac/sublime-focus/releases/tag/latest)
-2. Copy the downloaded artifact into the **Installed Packages** directory
-    - macOS: `~/Library/Application Support/Sublime Text/Installed Packages`
-    - Linux: `~/.config/sublime-text/Installed Packages`
-    - Window: `%APPDATA%\Sublime Text\Installed Packages`
+1. Select the `Settings > Browse Packages…` menu item
+2. Browse up a directory and then into the `Installed Packages/` directory
+3. Download [`Focus.sublime-package`](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) and copy it into the `Installed Packages/` directory
 
 ### Clone Repository
 
-1. Navigate to the **Packages** directory
-    - macOS: `~/Library/Application Support/Sublime Text/Packages`
-    - Linux: `~/.config/sublime-text/Packages`
-    - Window: `%APPDATA%\Sublime Text\Packages`
-2. Clone the repository:
+1. Select the `Settings > Browse Packages…` menu item
+2. Open the `Packages/` directory in the terminal or a git client
+3. Clone the repository:
 
     ```
     git clone https://github.com/Rypac/sublime-focus.git Focus
