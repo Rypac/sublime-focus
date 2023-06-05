@@ -22,7 +22,7 @@ A configurable, per-window Distraction Free mode plugin for Sublime Text.
 
 1. Select the `Settings > Browse Packages…` menu item
 2. Browse up a directory and then into the `Installed Packages/` directory
-3. Download [`Focus.sublime-package`](https://github.com/Rypac/sublime-focus/releases/download/latest/Focus.sublime-package) and copy it into the `Installed Packages/` directory
+3. Download [`Focus.sublime-package`](https://github.com/Rypac/sublime-focus/releases/latest/download/Focus.sublime-package) and copy it into the `Installed Packages/` directory
 
 ### Clone Repository
 
