@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create Sublime package
-        run: zip -r Focus.sublime-package . -x ".git/*" ".github/*" .gitignore .editorconfig
+        run: zip -r Focus.sublime-package . -x ".git/*" ".github/*" .gitignore
 
       - name: Release
         uses: softprops/action-gh-release@v1
