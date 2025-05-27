@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+from typing import Any
+
 import sublime
 from sublime import Settings, View, Window
 from sublime_plugin import EventListener, WindowCommand
-from typing import Any
-
 
 FOCUS_MODE_KEY = "focus_mode_state"
 
