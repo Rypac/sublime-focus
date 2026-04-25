@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import Any
+from typing import Any, override
 
 import sublime
 from sublime import Settings, View, Window
@@ -136,42 +134,51 @@ def exit_view_focus_mode(view: View):
 
 
 class FocusModeListener(EventListener):
+    @override
     def on_new(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
+    @override
     def on_new_window(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             exit_focus_mode(window)
 
+    @override
     def on_load(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
+    @override
     def on_pre_move(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             exit_view_focus_mode(view)
 
+    @override
     def on_post_move(self, view: View):
         if (window := view.window()) and window.template_settings().has(FOCUS_MODE_KEY):
             enter_view_focus_mode(view)
 
+    @override
     def on_load_project(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
+    @override
     def on_post_save_project(self, window: Window):
         if window.template_settings().has(FOCUS_MODE_KEY):
             apply_focus_mode_settings(window)
 
 
 class ToggleFocusModeCommand(WindowCommand):
+    @override
     def run(self):
         if not self.window.template_settings().has(FOCUS_MODE_KEY):
             enter_focus_mode(self.window)
         else:
             exit_focus_mode(self.window)
 
+    @override
     def description(self) -> str:
         return (
             "Enter Focus Mode"
